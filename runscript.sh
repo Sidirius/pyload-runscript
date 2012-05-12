@@ -235,17 +235,17 @@ copyseries()
 {
 for SERIEN in `cat $SERIES`
 do
- if [ ! -d "$DESTISERIEN/$SERIEN" ]; then
-   echo "`date` --- $DESTISERIEN/$SERIEN" >> $LOGFILE
-   cd "$DESTISERIEN/"
+ if [ ! -d "$DESTIS/$SERIEN" ]; then
+   echo "`date` --- $DESTIS/$SERIEN" >> $LOGFILE
+   cd "$DESTIS/"
    echo `mkdir $SERIEN`
    cd "$UF_FOLDER"
  fi
 echo "`date` --- find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f" >> $LOGFILE
 find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f -print | while read OMEGA
   do
-    echo "`date` --- mv "$OMEGA" "$DESTISERIEN/"$SERIEN"/"" >> $LOGFILE
-    mv "$OMEGA" "$DESTISERIEN/"$SERIEN"/"
+    echo "`date` --- mv "$OMEGA" "$DESTIS/"$SERIEN"/"" >> $LOGFILE
+    mv "$OMEGA" "$DESTIS/"$SERIEN"/"
     cd "$UF_FOLDER"; rmdir *
   done
 done
