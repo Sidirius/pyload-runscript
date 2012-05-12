@@ -17,6 +17,7 @@ if [ $CHKDIR = "unrar_finished" ]; then
 UF_FOLDER=$1
 else
 UF_FOLDER=$2
+fi
 
 #-----------------------------------------------------------------------
 # nachfolgende Pfadangaben bitte anpassen
