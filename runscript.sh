@@ -233,13 +233,14 @@ done
 
 copy2destination()
 {
-echo "`date` find `$UF_FOLDER/`* ! -iname "*.sh"" >> $LOGFILE 
+echo "`date` find `$UF_FOLDER/`* ! -iname "*.sh"" >> $LOGFILE
 find `$UF_FOLDER/`* ! -iname "*.sh" -print | while read FILE
 do
-  echo "mv "$FILE" "$DESTINATION/"" >> $LOGFILE
-  mv "$FILE" "$DESTINATION/"
+  echo "mv "$FILE" "$DESTINATION"" >> $LOGFILE
+  mv "$FILE" "$DESTINATION"
 done
 }
+
 
 copyseries()
 {
@@ -253,23 +254,20 @@ find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f -print | while read SERIE
   do
     echo "mv "$SERIE" "$DESTISERIEN/"$SERIEN"/"" >> $LOGFILE
     mv "$SERIE" "$DESTISERIEN/"$SERIEN"/"
+    cd $UF_FOLDER; rmdir *
   done
 done
 }
+
 copyseries
+ sleep 2
+copy2destination
 
 #---------------------------------------------------------------------------
 #------- loesche das - leere - Downloadverzeichnis
 #---------------------------------------------------------------------------
 
-if [ $? -eq 0 ] ; then
-  sleep 25; rm -rf "$UF_FOLDER"
-else
-  copy2destination 
-    if [ $? -eq 0 ] ; then
-      sleep 25; rm -rf "$UF_FOLDER"
-    fi
-fi
+sleep 25; rm -rf "$UF_FOLDER"
 
 #---------------------------------------------------------------------------
 #------- Scriptende
