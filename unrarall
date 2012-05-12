@@ -1,0 +1,101 @@
+#!/bin/bash 
+
+declare -x DIR="`pwd`"
+declare -ix CLEAN=0
+declare -ix FORCE_CLEAN=0
+declare -ix VERBOSE=0
+declare -x UNRAR_METHOD="e"
+
+while [ -n "$1" ]; do
+  case "$1" in
+    -d | --dir )  
+      shift
+      DIR="$1"
+      ;;
+    -c | --clean )  
+      CLEAN=1
+      ;;
+    -f | --force )  
+      FORCE_CLEAN=1
+      CLEAN=1
+      ;;
+      *)
+      # 
+      exit 1
+      ;;
+  esac
+  shift
+done 
+
+if [ "${DIR}" == "." ]; then
+  DIR="`pwd`"
+fi
+
+if [ -d "$DIR" ]; then
+  echo "entpacke \"${DIR}\"" >> $LOGFILE
+else
+  echo "\"${DIR}\" nicht vorhanden"
+  exit 1;
+fi
+
+CURRENT_DIR=`pwd`
+
+#find all files 
+COUNT=0
+
+IFS_TEMP=$IFS
+IFS=$(echo -en "\n\b")
+
+for file in $(/opt/bin/find "$DIR" -iname '*.rar'); do
+  let COUNT=COUNT+1
+  filename=`basename "$file"`
+  dirname=`dirname "$file"`
+
+  sfilename="${filename%.rar}"
+
+  cd "$dirname"
+
+while true; do read password || break
+   /opt/bin/unrar x -inul -p"$password" "$filename" >/dev/null
+ done < /share/Public/passwoerter
+
+SUCCESS=$?
+
+  if [ "$SUCCESS" -eq 0 ]; then
+    echo "erfolgreich"
+  else
+    let COUNT=COUNT-1
+    echo "fehlgeschlagen"
+  fi
+  
+  # cleanup all .rar/.r[0-9][0-9]/
+  if [ "$CLEAN" -eq 1 ] ; then
+    if [ "$SUCCESS" -eq "0" ] || [ "$FORCE_CLEAN" -eq 1 ]; then
+      echo "Cleaning $file"
+      if [ "$VERBOSE" -eq 1 ]; then
+        rm -v "${sfilename}".rar
+        rm -v "${sfilename}".r[0-9][0-9] 
+      else
+        rm "${sfilename}".rar 2>/dev/null
+        rm "${sfilename}".r[0-9][0-9] 2>/dev/null
+      fi
+
+    else
+      echo "`date` --- unrar fehlgeschlagen, loeschen nicht moeglich!" >> $LOGFILE
+    fi
+  fi
+  cd "$CURRENT_DIR"
+done
+IFS=$IFS_TEMP
+
+if [ "$COUNT" -ne 0 ]; then
+  EXIT_PHRASE="extrahiert" 
+  if [ "$CLEAN" -eq 1 ]; then
+    EXIT_PHRASE="extrahiert und entfernt"
+  fi
+  echo "$COUNT Archiv-Dateien $EXIT_PHRASE" >> $LOGFILE
+else
+  echo "nichts entpackt" >> $LOGFILE
+fi
+
+exit 0 
