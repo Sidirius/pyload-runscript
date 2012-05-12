@@ -48,7 +48,7 @@ echo "$0 0 Scriptname" >>$LOGFILE
 echo "$1 1. Argument" >>$LOGFILE
 echo "$2 2. Argument" >>$LOGFILE
 echo "$# Argumente gesamt" >>$LOGFILE
-echo STOP Argumente >>$LOGFILE
+echo "STOP Argumente" >>$LOGFILE
 
 #-----------------------------------------------------------------------
 # Check ob Argumente uebergeben und \$RUNSCRP vorhanden
@@ -71,7 +71,6 @@ cd "$PREFIX"
 wget http://pyload-runscript.googlecode.com/files/runscript.sh
 chmod +x runscript.sh
 fi
-
 
 #-----------------------------------------------------------------------
 # Wenn UNRARON=1 entpacke Archive
