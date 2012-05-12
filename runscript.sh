@@ -231,31 +231,33 @@ do
   rm "$FILE"
 done
 
-copy2destination()
-{
-echo "`date` find `$UF_FOLDER/`* ! -iname "*.sh"" >> $LOGFILE
-find `$UF_FOLDER/`* ! -iname "*.sh" -print | while read FILE
-do
-  echo "mv "$FILE" "$DESTINATION"" >> $LOGFILE
-  mv "$FILE" "$DESTINATION"
-done
-}
-
-
 copyseries()
 {
 for SERIEN in `cat $SERIES`
 do
-#---------------------------------------------------------------------------
-#------- entferne "-type f" um die Datei inkl. Ordner, falls vorhanden, zu verschieben
-#---------------------------------------------------------------------------
-echo "`date` find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f" >> $LOGFILE
-find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f -print | while read SERIE
+ if [ ! -d "$DESTISERIEN/$SERIEN" ]; then
+   echo "`date` --- $DESTISERIEN/$SERIEN" >> $LOGFILE
+   cd "$DESTISERIEN/"
+   echo `mkdir $SERIEN`
+   cd "$UF_FOLDER"
+ fi
+echo "`date` --- find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f" >> $LOGFILE
+find `$UF_FOLDER/`* -iname "*"$SERIEN"*" -type f -print | while read OMEGA
   do
-    echo "mv "$SERIE" "$DESTISERIEN/"$SERIEN"/"" >> $LOGFILE
-    mv "$SERIE" "$DESTISERIEN/"$SERIEN"/"
-    cd $UF_FOLDER; rmdir *
+    echo "`date` --- mv "$OMEGA" "$DESTISERIEN/"$SERIEN"/"" >> $LOGFILE
+    mv "$OMEGA" "$DESTISERIEN/"$SERIEN"/"
+    cd "$UF_FOLDER"; rmdir *
   done
+done
+}
+
+copy2destination()
+{
+echo "`date` --- find `$UF_FOLDER/`* ! -iname "*.sh"" >> $LOGFILE
+find `$UF_FOLDER/`* ! -iname "*.sh" -print | while read FILE
+do
+  echo "`date` --- mv "$FILE" "$DESTINATION"" >> $LOGFILE
+  mv "$FILE" "$DESTINATION"
 done
 }
 
