@@ -12,21 +12,26 @@
 #----- "PREFIX" speichern und ausfuehrbar machen "chmod +x [Scriptname]"
 #-----------------------------------------------------------------------
 
+CHKDIR="$(basename `pwd` )"
+if [ $CHKDIR = "unrar_finished" ]; then
+UF_FOLDER=$1
+else
+UF_FOLDER=$2
+
 #-----------------------------------------------------------------------
 # nachfolgende Pfadangaben bitte anpassen
 #-----------------------------------------------------------------------
 
 PATH=/opt/bin:/opt/sbin
-PREFIX="/share/Public" # dein "Home-Verzeichnis" 
+PREFIX="/share/Public"            # dein "Home-Verzeichnis" 
 RUNSCRP=${PREFIX}/runscript.sh
-UNRARALL=${PREFIX}/unrarall # Pfad zu unrarall https://github.com/arfoll/unrarall
-DESTINATION=/share/Qmultimedia/ # dein Download-Zielverzeichnis - ANPASSEN!
-DESTISERIEN=/share/Qmultimedia/Serien # Serien-Verzeichnis - ANPASSEN!
-LOGFILE=${PREFIX}/pyload_copy_log # Logfile-Pfad
-UNRARON=1 # Downloads/Archive entpacken: ja = 1 - nein = 0
-DELNAME=${PREFIX}/DELNAME # Datei welche die Ersetzungsvariablen enthaelt
-SERIES=${PREFIX}/SERIEN # Datei welche die Serienvariablen enthaelt
-UF_FOLDER=$2 # $2 = "package_finished" $1 = "unrar_finished"
+UNRARALL=${PREFIX}/unrarall       # Pfad zu unrarall 
+DESTINATION=/share/Qmultimedia/   # dein Downloadverzeichnis - ANPASSEN!
+DESTIS=/share/Qmultimedia/Serien  # Serien-Verzeichnis - ANPASSEN!
+LOGFILE=${PREFIX}/logfile         # Logfile-Pfad
+UNRARON=1                         # Archive entpacken: ja = 1 - nein = 0
+DELNAME=${PREFIX}/DELNAME         # Datei mit Ersetzungsvariablen 
+SERIES=${PREFIX}/SERIEN           # Datei mit Serienvariablen
 
 #-----------------------------------------------------------------------
 # sende personalisierte Angaben an runscript.sh 
@@ -34,7 +39,7 @@ UF_FOLDER=$2 # $2 = "package_finished" $1 = "unrar_finished"
 
 export UF_FOLDER
 export DESTINATION
-export DESTISERIEN
+export DESTIS
 export DELNAME
 export SERIES
 export LOGFILE
@@ -43,13 +48,13 @@ export LOGFILE
 # Logfile-Ausgabe, setze "#" um Log zu deaktivieren
 #-----------------------------------------------------------------------
 
-echo "`date`START Argumente" >>$LOGFILE
+echo "`date` --- START Argumente" >>$LOGFILE
 echo "$0 0 Scriptname" >>$LOGFILE
 echo "$1 1. Argument" >>$LOGFILE
 echo "$2 2. Argument" >>$LOGFILE
 echo "$# Argumente gesamt" >>$LOGFILE
 echo "STOP Argumente" >>$LOGFILE
-
+echo "-----------------------------------" >>$LOGFILE
 #-----------------------------------------------------------------------
 # Check ob Argumente uebergeben und \$RUNSCRP vorhanden
 #-----------------------------------------------------------------------
