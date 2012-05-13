@@ -20,13 +20,13 @@ UF_FOLDER=$2
 fi
 
 #-----------------------------------------------------------------------
-# nachfolgende Pfadangaben bitte anpassen
+#----- nachfolgende Pfadangaben bitte anpassen
 #-----------------------------------------------------------------------
 
 PATH=/opt/bin:/opt/sbin
-PREFIX="/share/Public"            # dein "Home-Verzeichnis" 
-RUNSCRP=${PREFIX}/runscript.sh
-UNRARALL=${PREFIX}/unrarall       # Pfad zu unrarall 
+PREFIX="/share/Public"            # dein "Home-Verzeichnis" - ANPASSEN!
+RUNSCRP=${PREFIX}/runscript.sh    # Pfad zum runscript 
+UNRARALL=${PREFIX}/unrarscript    # Pfad zum unrarscript 
 DESTINATION=/share/Qmultimedia/   # dein Downloadverzeichnis - ANPASSEN!
 DESTIS=/share/Qmultimedia/Serien  # Serien-Verzeichnis - ANPASSEN!
 LOGFILE=${PREFIX}/logfile         # Logfile-Pfad
@@ -35,7 +35,7 @@ DELNAME=${PREFIX}/DELNAME         # Datei mit Ersetzungsvariablen
 SERIES=${PREFIX}/SERIEN           # Datei mit Serienvariablen
 
 #-----------------------------------------------------------------------
-# sende personalisierte Angaben an runscript.sh 
+#----- sende personalisierte Angaben an runscript.sh 
 #-----------------------------------------------------------------------
 
 export UF_FOLDER
@@ -46,7 +46,7 @@ export SERIES
 export LOGFILE
 
 #-----------------------------------------------------------------------
-# Logfile-Ausgabe, setze "#" um Log zu deaktivieren
+#----- Logfile-Ausgabe, setze "#" um Log zu deaktivieren
 #-----------------------------------------------------------------------
 
 echo "`date` --- START Argumente" >>$LOGFILE
@@ -56,8 +56,9 @@ echo "$2 2. Argument" >>$LOGFILE
 echo "$# Argumente gesamt" >>$LOGFILE
 echo "STOP Argumente" >>$LOGFILE
 echo "-----------------------------------" >>$LOGFILE
+
 #-----------------------------------------------------------------------
-# Check ob Argumente uebergeben und \$RUNSCRP vorhanden
+#----- Check ob Argumente uebergeben und \$RUNSCRP vorhanden
 #-----------------------------------------------------------------------
 
 if [ "$#" = 0 ]; then
@@ -78,8 +79,24 @@ wget http://pyload-runscript.googlecode.com/files/runscript.sh
 chmod +x runscript.sh
 fi
 
+if [ ! -f $unrarscript ]; then
+cd "$PREFIX"
+wget http://pyload-runscript.googlecode.com/files/unrarscript
+chmod +x unrarscript
+fi
+
+if [ ! -f $SERIES ]; then
+cd "$PREFIX"
+wget http://pyload-runscript.googlecode.com/files/SERIES
+fi
+
+if [ ! -f $DELNAME ]; then
+cd "$PREFIX"
+wget http://pyload-runscript.googlecode.com/files/DELNAME
+fi
+
 #-----------------------------------------------------------------------
-# Wenn UNRARON=1 entpacke Archive
+#----- Wenn UNRARON=1 entpacke Archive
 #-----------------------------------------------------------------------
 
 if [ $UNRARON = 1 ]; then
@@ -88,7 +105,7 @@ if [ $UNRARON = 1 ]; then
 fi
 
 #-----------------------------------------------------------------------
-# Kopiere und starte das Haupt-Script
+#----- Kopiere und starte das Haupt-Script
 #-----------------------------------------------------------------------
 
 if [ $STRNSCRP = 0 ]; then
@@ -106,5 +123,5 @@ fi
 exit 0
 
 #-----------------------------------------------------------------------
-# Scriptende
+#----- Scriptende
 #-----------------------------------------------------------------------
