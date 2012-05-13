@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 declare -x DIR="`pwd`"
 declare -ix CLEAN=0
@@ -8,24 +8,24 @@ declare -x UNRAR_METHOD="e"
 
 while [ -n "$1" ]; do
   case "$1" in
-    -d | --dir )  
+    -d | --dir )
       shift
       DIR="$1"
       ;;
-    -c | --clean )  
+    -c | --clean )
       CLEAN=1
       ;;
-    -f | --force )  
+    -f | --force )
       FORCE_CLEAN=1
       CLEAN=1
       ;;
       *)
-      # 
+      #
       exit 1
       ;;
   esac
   shift
-done 
+done
 
 if [ "${DIR}" == "." ]; then
   DIR="`pwd`"
@@ -40,9 +40,11 @@ fi
 
 CURRENT_DIR=`pwd`
 
-#find all files 
-COUNT=0
+#--------------------------------------------------------------------
+#----- Suche Archive
+#--------------------------------------------------------------------
 
+COUNT=0
 IFS_TEMP=$IFS
 IFS=$(echo -en "\n\b")
 
@@ -50,9 +52,7 @@ for file in $(/opt/bin/find "$DIR" -iname '*.rar'); do
   let COUNT=COUNT+1
   filename=`basename "$file"`
   dirname=`dirname "$file"`
-
   sfilename="${filename%.rar}"
-
   cd "$dirname"
 
 while true; do read password || break
@@ -67,20 +67,22 @@ SUCCESS=$?
     let COUNT=COUNT-1
     echo "fehlgeschlagen"
   fi
-  
-  # cleanup all .rar/.r[0-9][0-9]/
-  if [ "$CLEAN" -eq 1 ] ; then
+
+#--------------------------------------------------------------------
+#----- entferne entpackte Archive
+#--------------------------------------------------------------------
+
+if [ "$CLEAN" -eq 1 ] ; then
     if [ "$SUCCESS" -eq "0" ] || [ "$FORCE_CLEAN" -eq 1 ]; then
       echo "Cleaning $file"
       if [ "$VERBOSE" -eq 1 ]; then
         rm -v "${sfilename}".rar
-        rm -v "${sfilename}".r[0-9][0-9] 
+        rm -v "${sfilename}".r[0-9][0-9]
       else
         rm "${sfilename}".rar 2>/dev/null
         rm "${sfilename}".r[0-9][0-9] 2>/dev/null
       fi
-
-    else
+     else
       echo "`date` --- unrar fehlgeschlagen, loeschen nicht moeglich!" >> $LOGFILE
     fi
   fi
@@ -89,13 +91,14 @@ done
 IFS=$IFS_TEMP
 
 if [ "$COUNT" -ne 0 ]; then
-  EXIT_PHRASE="extrahiert" 
+  EXIT_PHRASE="extrahiert"
   if [ "$CLEAN" -eq 1 ]; then
     EXIT_PHRASE="extrahiert und entfernt"
   fi
   echo "$COUNT Archiv-Dateien $EXIT_PHRASE" >> $LOGFILE
 else
   echo "nichts entpackt" >> $LOGFILE
+  exit 1
 fi
 
-exit 0 
+exit 0
