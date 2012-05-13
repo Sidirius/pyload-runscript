@@ -57,7 +57,7 @@ for file in $(/opt/bin/find "$DIR" -iname '*.rar'); do
 
 while true; do read password || break
    /opt/bin/unrar x -inul -p"$password" "$filename" >/dev/null
- done < /share/Public/passwoerter
+ done < $PASSWORDS
 
 SUCCESS=$?
 
@@ -102,3 +102,7 @@ else
 fi
 
 exit 0
+
+#--------------------------------------------------------------------
+#----- Scriptende
+#--------------------------------------------------------------------
