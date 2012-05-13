@@ -33,6 +33,7 @@ LOGFILE=${PREFIX}/logfile         # Logfile-Pfad
 UNRARON=1                         # Archive entpacken: ja = 1 - nein = 0
 DELNAME=${PREFIX}/DELNAME         # Datei mit Ersetzungsvariablen 
 SERIES=${PREFIX}/SERIEN           # Datei mit Serienvariablen
+PASSWORDS=${PREFIX}/passwoerter   # Datei mit Archiv-Passwoertern 
 
 #-----------------------------------------------------------------------
 #----- sende personalisierte Angaben an runscript.sh 
@@ -44,6 +45,7 @@ export DESTIS
 export DELNAME
 export SERIES
 export LOGFILE
+export PASSWORDS
 
 #-----------------------------------------------------------------------
 #----- Logfile-Ausgabe, setze "#" um Log zu deaktivieren
@@ -93,6 +95,11 @@ fi
 if [ ! -f $DELNAME ]; then
 cd "$PREFIX"
 wget http://pyload-runscript.googlecode.com/files/DELNAME
+fi
+
+if [ ! -f $PASSWORDS ]; then
+cd "$PREFIX"
+touch passwoerter
 fi
 
 #-----------------------------------------------------------------------
