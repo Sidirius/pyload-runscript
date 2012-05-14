@@ -81,7 +81,7 @@ wget http://pyload-runscript.googlecode.com/files/runscript.sh
 chmod +x runscript.sh
 fi
 
-if [ ! -f $unrarscript ]; then
+if [ ! -f $UNRARALL ]; then
 cd "$PREFIX"
 wget http://pyload-runscript.googlecode.com/files/unrarscript
 chmod +x unrarscript
