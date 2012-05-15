@@ -213,12 +213,14 @@ renFolder
  sleep 1
 renFiles
 
+if [ $ALLLOW != 1 ]; then
  sleep 1
 upRecursive
  sleep 1
 upFolder
  sleep 1
 upFiles
+fi
 
 #---------------------------------------------------------------------------
 #------- verschiebe Dateien und Ordner ins Zielverzeichnis
