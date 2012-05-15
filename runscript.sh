@@ -7,15 +7,9 @@
 #------- eine saubere Dateikultur
 #-------
 #------- Initial-Script für pyLoad "package_finished" / "unrar_finished"
-#------- http://code.google.com/p/pyload-runscript/source/browse/start.sh
 #------- 
 #------- aktuelle "ipkg tr" "ipkg sed" "ipkg find" Pakete vorausgesetzt!
 #------- "ipkg update" "ipkg install tr sed find"
-#---------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------
-#------- persoenliche Pfadangaben bearbeiten
-#------- http://code.google.com/p/pyload-runscript/source/browse/start.sh
 #---------------------------------------------------------------------------
 
 PATH=/opt/bin:/opt/sbin
@@ -106,7 +100,6 @@ done
 #---------------------------------------------------------------------------
 #------- entferne Szene-Tags und / oder unnoetige Dateinamenteile
 #------- "$DELNAME" ggf. anlegen und mit zu filternden Inhalten fuellen
-#------- http://code.google.com/p/pyload-runscript/source/browse/start.sh
 #---------------------------------------------------------------------------
 
 rmTagsRecursive()
