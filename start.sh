@@ -1,15 +1,7 @@
 #!/bin/sh
 
 #-----------------------------------------------------------------------
-#----- Scriptstart - Initialscript für pyLoad Hook "package_finished"
-#----- Script unter "./pyload/scripts/package_finished" oder
-#----- "./pyload/scripts/unrar_finished" speichern und ausfuehrbar machen
-#----- "chmod +x [Scriptname]" 
-#-----------------------------------------------------------------------
-#----- Script zur Datei / Ordner Umbenennung 
-#----- http://code.google.com/p/pyload-runscript/source/browse/runscript.sh
-#----- Script (siehe Link) unter personalisierter Pfadangabe der Variablen 
-#----- "PREFIX" speichern und ausfuehrbar machen "chmod +x [Scriptname]"
+#----- Scriptstart
 #-----------------------------------------------------------------------
 
 CHKDIR="$(basename `pwd` )"
@@ -31,12 +23,13 @@ DESTINATION=/share/Qmultimedia/   # dein Downloadverzeichnis - ANPASSEN!
 DESTIS=/share/Qmultimedia/Serien  # Serien-Verzeichnis - ANPASSEN!
 LOGFILE=${PREFIX}/logfile         # Logfile-Pfad
 UNRARON=1                         # Archive entpacken: ja = 1 - nein = 0
+ALLLOW=0                          # Dateinamen in Kleinbuchstaben = 1
 DELNAME=${PREFIX}/DELNAME         # Datei mit Ersetzungsvariablen 
 SERIES=${PREFIX}/SERIEN           # Datei mit Serienvariablen
 PASSWORDS=${PREFIX}/passwoerter   # Datei mit Archiv-Passwoertern 
 
 #-----------------------------------------------------------------------
-#----- sende personalisierte Angaben an runscript.sh 
+#----- exportiere personalisierte Angaben 
 #-----------------------------------------------------------------------
 
 export UF_FOLDER
@@ -46,6 +39,7 @@ export DELNAME
 export SERIES
 export LOGFILE
 export PASSWORDS
+export ALLLOW
 
 #-----------------------------------------------------------------------
 #----- Logfile-Ausgabe, setze "#" um Log zu deaktivieren
