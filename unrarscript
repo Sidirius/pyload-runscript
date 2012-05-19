@@ -1,0 +1,123 @@
+#!/bin/bash 
+
+#--------------------------------------------------------------------
+#----- Scriptstart
+#--------------------------------------------------------------------
+
+declare -x DIR="`pwd`"
+declare -ix CLEAN=0
+declare -ix FORCE_CLEAN=0
+declare -ix VERBOSE=0
+declare -x UNRAR_METHOD="e"
+
+while [ -n "$1" ]; do
+  case "$1" in
+    -h | --help )  
+      usage	
+      exit 0
+      ;;
+    -d | --dir )  
+      shift
+      DIR="$1"
+      ;;
+    -c | --clean )  
+      CLEAN=1
+      ;;
+    -f | --force )  
+      FORCE_CLEAN=1
+      CLEAN=1
+      ;;
+    -v | --verbose )
+      VERBOSE=1
+      ;;
+    --full-path )
+      UNRAR_METHOD="x"
+      ;;
+    *)
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+if [ "${DIR}" == "." ]; then
+  DIR="`pwd`"
+fi
+
+
+if [ -d "$DIR" ]; then
+  echo "Entpacke Archiv  \"${DIR}\"" >>$LOGFILE
+else
+  message error "Verzeichnis \"${DIR}\" nicht vorhanden!" >>$LOGFILE
+  exit 1;
+fi
+
+
+CURRENT_DIR=`pwd`
+
+COUNT=0
+
+IFS_TEMP=$IFS
+IFS=$(echo -en "\n\b")
+
+for file in $(/opt/bin/find "$DIR" -iname '*.rar'); do
+  let COUNT=COUNT+1
+  echo "Entpacke (${UNRAR_METHOD}) \"$file\"" >>$LOGFILE
+  filename=`basename "$file"`
+  dirname=`dirname "$file"`
+
+  sfilename="${filename%.rar}"
+
+  cd "$dirname"
+
+while true; do read password || break
+   /opt/bin/unrar x -inul -p"$password" "$filename" >/dev/null
+ done < /share/Public/passwoerter
+  SUCCESS=$?
+
+
+  if [ "$SUCCESS" -eq 0 ]; then
+    message ok "ok";
+  else
+    let COUNT=COUNT-1
+    message error "failed"
+  fi
+  
+  if [ "$CLEAN" -eq 1 ] ; then
+    if [ "$SUCCESS" -eq "0" ] || [ "$FORCE_CLEAN" -eq 1 ]; then
+      echo "Entferne $file" >>$LOGFILE
+      if [ "$VERBOSE" -eq 1 ]; then
+        rm -v "${sfilename}".rar
+        rm -v "${sfilename}".r[0-9][0-9] 
+      else
+        rm "${sfilename}".rar 2>/dev/null
+        rm "${sfilename}".r[0-9][0-9] 2>/dev/null
+      fi
+
+    else
+      echo "`date` Entpacken fehlgeschlagen" >> $LOGFILE
+    fi
+  fi
+  cd "$CURRENT_DIR"
+done
+IFS=$IFS_TEMP
+
+#If success
+if [ "$COUNT" -ne 0 ]; then
+  EXIT_PHRASE="gefunden und entpackt" >>$LOGFILE
+  if [ "$CLEAN" -eq 1 ]; then
+    EXIT_PHRASE="gefunden, entpackt und entfernt" >>$LOGFILE
+  fi
+  echo "$COUNT Dateien $EXIT_PHRASE" >> $LOGFILE
+  echo "---------------------------------------" >>$LOGFILE
+else
+  echo "Nichts entpackt" >> $LOGFILE
+  echo "---------------------------------------" >>$LOGFILE
+  exit 1
+fi
+
+exit 0
+
+#--------------------------------------------------------------------
+#----- Scriptende
+#--------------------------------------------------------------------
