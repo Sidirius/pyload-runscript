@@ -45,12 +45,14 @@ export ALLLOW
 #----- Logfile-Ausgabe, setze "#" um Log zu deaktivieren
 #-----------------------------------------------------------------------
 
-echo "`date` --- START Argumente" >>$LOGFILE
+echo "-----------------------------------" >>$LOGFILE
+echo "   " >>$LOGFILE
+echo "   " >>$LOGFILE
+echo "`date`" >>$LOGFILE
 echo "$0 0 Scriptname" >>$LOGFILE
 echo "$1 1. Argument" >>$LOGFILE
 echo "$2 2. Argument" >>$LOGFILE
 echo "$# Argumente gesamt" >>$LOGFILE
-echo "STOP Argumente" >>$LOGFILE
 echo "-----------------------------------" >>$LOGFILE
 
 #-----------------------------------------------------------------------
@@ -102,10 +104,10 @@ fi
 
 if [ $UNRARON = 1 ]; then
  cd "$UF_FOLDER"
-  `$UNRARALL -d "$UF_FOLDER" --full-path -c`	
+  `$UNRARALL -d "$UF_FOLDER" --full-path -c`    
 fi
 
-if [ $? = 1]; then
+if [ $? = "1" ]; then
 exit 1
 fi
 
@@ -116,6 +118,8 @@ fi
 if [ $STRNSCRP = 0 ]; then
   echo "`date` --- keine Argumente uebergeben, beende Script ---" >> $LOGFILE
   echo "--------------------------------------------------------" >> $LOGFILE
+  cd $PREFIX
+  rmdir dummydir
   exit 0
 else
   sleep 5
@@ -129,4 +133,4 @@ exit 0
 
 #-----------------------------------------------------------------------
 #----- Scriptende
-#-----------------------------------------------------------------------
+#----------------------------------------------------------------------- 
