@@ -20,7 +20,7 @@ PATH=/opt/bin:/opt/sbin
 #---------------------------------------------------------------------------
 
 cd "$UF_FOLDER"
-/opt/bin/find . \( -name '*.sfv' -o -name '*.nfo' -o -name '*.txt' -o -name '*.rev' \) -type f -exec rm '{}' \;
+/opt/bin/find . \( -name '*.sfv' -o -name '*.nfo' -o -name '*.txt' -o -name '*.rev' -o -name '*.html' \) -type f -exec rm '{}' \;
 /opt/bin/find . \( -iname '*sample*' -o -iname 'subs' -o -iname '*imdb*' \) -type d -exec rm -rf '{}' \;
 
 #---------------------------------------------------------------------------
@@ -31,8 +31,8 @@ renRecursive()
 {
 find `$UF_FOLDER/`* ! -name "*.sh" -type d -print | while read FILE
 do
-  if [ -d $FILE ]; then
-    cd $FILE
+  if [ -d "$FILE" ]; then
+    cd "$FILE"
     renRecursive
     renFolder
     renFiles
@@ -47,7 +47,7 @@ find `$UF_FOLDER/`* ! -name "*.sh" -type d -print | while read FILE
 do
   if [ -d "$FILE" ]; then
   NEW=`echo "$FILE" | sed -r 's/ +/./g' | sed -r 's/-/./g;s/_/./g;s/^\.+//;s/\.+$//' | tr -s '.'`
-    if [ $NEW != $FILE -a ! -f $NEW -a ! -d $NEW ]; then
+    if [ "$NEW" != "$FILE" -a ! -f "$NEW" -a ! -d "$NEW" ]; then
       mv "$FILE" "$NEW"
     fi
   fi
@@ -60,7 +60,7 @@ find `$UF_FOLDER/`* ! -name "*.sh" -type f -print | while read FILE
 do
   if [ -f "$FILE" ]; then
   NEW=`echo "$FILE" | sed -r 's/ +/./g' | sed -r 's/-/./g;s/_/./g;s/^\.+//;s/\.+$//' | tr -s '.'`
-    if [ $NEW != $FILE -a ! -f $NEW -a ! -d $NEW ]; then
+    if [ "$NEW" != "$FILE" -a ! -f "$NEW" -a ! -d "$NEW" ]; then
       mv "$FILE" "$NEW"
     fi
   fi
@@ -99,7 +99,6 @@ done
 
 #---------------------------------------------------------------------------
 #------- entferne Szene-Tags und / oder unnoetige Dateinamenteile
-#------- "$DELNAME" ggf. anlegen und mit zu filternden Inhalten fuellen
 #---------------------------------------------------------------------------
 
 rmTagsRecursive()
