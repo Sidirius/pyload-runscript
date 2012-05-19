@@ -225,6 +225,11 @@ do
   rm "$FILE"
 done
 
+find `$UF_FOLDER/`* \( -iname '*.sh' -o -iname '*.rar' \) -type f -print | while read FILE
+do
+  sleep 15
+done
+
 copyseries()
 {
 for SERIEN in `cat $SERIES`
@@ -251,6 +256,7 @@ echo "`date` --- find `$UF_FOLDER/`* ! -iname "*.sh"" >> $LOGFILE
 find `$UF_FOLDER/`* ! -iname "*.sh" -print | while read FILE
 do
   echo "`date` --- mv "$FILE" "$DESTINATION"" >> $LOGFILE
+  echo "*** Scriptende ***" >> $LOGFILE
   mv "$FILE" "$DESTINATION"
 done
 }
@@ -263,10 +269,10 @@ copy2destination
 #------- loesche das - leere - Downloadverzeichnis
 #---------------------------------------------------------------------------
 
-sleep 25; rm -rf "$UF_FOLDER"
+sleep 225; rmdir "$UF_FOLDER"
 
 #---------------------------------------------------------------------------
 #------- Scriptende
 #---------------------------------------------------------------------------
 
-exit 0
+exit 0 
