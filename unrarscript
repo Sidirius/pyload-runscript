@@ -4,6 +4,8 @@
 #----- Scriptstart
 #--------------------------------------------------------------------
 
+PATH=/opt/bin:/opt/sbin
+
 declare -x DIR="`pwd`"
 declare -ix CLEAN=0
 declare -ix FORCE_CLEAN=0
@@ -60,7 +62,7 @@ COUNT=0
 IFS_TEMP=$IFS
 IFS=$(echo -en "\n\b")
 
-for file in $(/opt/bin/find "$DIR" -iname '*.rar'); do
+for file in $(find "$DIR" -iname '*.rar'); do
   let COUNT=COUNT+1
   echo "Entpacke (${UNRAR_METHOD}) \"$file\"" >>$LOGFILE
   filename=`basename "$file"`
@@ -71,16 +73,15 @@ for file in $(/opt/bin/find "$DIR" -iname '*.rar'); do
   cd "$dirname"
 
 while true; do read password || break
-   /opt/bin/unrar x -inul -p"$password" "$filename" >/dev/null
- done < /share/Public/passwoerter
+   unrar x -inul -p"$password" "$filename" >/dev/null
+ done < "$PASSWORDS"
   SUCCESS=$?
 
 
   if [ "$SUCCESS" -eq 0 ]; then
-    message ok "ok";
+    sleep 1	
   else
     let COUNT=COUNT-1
-    message error "failed"
   fi
   
   if [ "$CLEAN" -eq 1 ] ; then
@@ -107,12 +108,11 @@ if [ "$COUNT" -ne 0 ]; then
   EXIT_PHRASE="gefunden und entpackt" >>$LOGFILE
   if [ "$CLEAN" -eq 1 ]; then
     EXIT_PHRASE="gefunden, entpackt und entfernt" >>$LOGFILE
+    echo "---------------------------------------" >>$LOGFILE
   fi
   echo "$COUNT Dateien $EXIT_PHRASE" >> $LOGFILE
-  echo "---------------------------------------" >>$LOGFILE
 else
   echo "Nichts entpackt" >> $LOGFILE
-  echo "---------------------------------------" >>$LOGFILE
   exit 1
 fi
 
