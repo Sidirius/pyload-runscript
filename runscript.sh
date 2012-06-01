@@ -20,8 +20,13 @@ PATH=/opt/bin:/opt/sbin
 #---------------------------------------------------------------------------
 
 cd "$UF_FOLDER"
-/opt/bin/find . \( -name '*.sfv' -o -name '*.nfo' -o -name '*.txt' -o -name '*.rev' -o -name '*.html' \) -type f -exec rm '{}' \;
-/opt/bin/find . \( -iname '*sample*' -o -iname 'subs' -o -iname '*imdb*' \) -type d -exec rm -rf '{}' \;
+find . \( -name '*.sfv' -o -name '*.nfo' -o -name '*.txt' -o -name '*.rev' -o -name '*.html' -o -name '*.url' \) -type f -exec rm '{}' \;
+find . \( -iname '*sample*' -o -iname 'subs' -o -iname '*imdb*' \) -type d -exec rm -rf '{}' \;
+
+find `$UF_FOLDER/`* -iname '*.rar' -type f -print | while read FILE
+do
+  sleep 15
+done
 
 #---------------------------------------------------------------------------
 #------- entferne Leerzeichen und ersetze Sonderzeichen mit Punkten
@@ -225,11 +230,6 @@ do
   rm "$FILE"
 done
 
-find `$UF_FOLDER/`* \( -iname '*.sh' -o -iname '*.rar' \) -type f -print | while read FILE
-do
-  sleep 15
-done
-
 copyseries()
 {
 for SERIEN in `cat $SERIES`
@@ -257,7 +257,7 @@ find `$UF_FOLDER/`* ! -iname "*.sh" -print | while read FILE
 do
   echo "`date` --- mv "$FILE" "$DESTINATION"" >> $LOGFILE
   echo "*** Scriptende ***" >> $LOGFILE
-  mv "$FILE" "$DESTINATION"
+  touch "$FILE"; mv "$FILE" "$DESTINATION"
 done
 }
 
@@ -275,4 +275,4 @@ sleep 225; rmdir "$UF_FOLDER"
 #------- Scriptende
 #---------------------------------------------------------------------------
 
-exit 0 
+exit 0
